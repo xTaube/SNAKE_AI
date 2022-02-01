@@ -53,5 +53,17 @@ class SnakeGame:
     def _update_ui(self):
         pass
 
-    def _move(self):
-        pass
+    def _move(self, direction: DirectionEnum) -> None:
+        x = self.head.x
+        y = self.head.y
+
+        if direction == DirectionEnum.RIGHT:
+            x += BLOCK_SIZE
+        elif direction == DirectionEnum.LEFT:
+            x -= BLOCK_SIZE
+        elif direction == DirectionEnum.DOWN:
+            y += BLOCK_SIZE
+        elif direction == DirectionEnum.UP:
+            y -= BLOCK_SIZE
+
+        self.head = Point(x, y)
