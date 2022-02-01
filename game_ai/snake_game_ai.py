@@ -31,14 +31,7 @@ class SnakeGame:
         pygame.display.set_caption("Snake")
         self.clock = pygame.time.Clock()
 
-        # init game state
-        self.direction = DirectionEnum.RIGHT
-        self.head = Point(self.width / 2, self.height / 2)
-        self.snake = [self.head, Point(self.head.x - BLOCK_SIZE, self.head.y),
-                      Point(self.head.x - 2 * BLOCK_SIZE, self.head.y)]
-        self.score = 0
-        self.food = None
-        self._place_food()
+        self.reset()
 
     def play(self) -> None:
         while True:
@@ -50,6 +43,17 @@ class SnakeGame:
 
         pygame.quit()
         exit()
+
+    def reset(self) -> None:
+        # init game state
+        self.direction = DirectionEnum.RIGHT
+        self.head = Point(self.width / 2, self.height / 2)
+        self.snake = [self.head, Point(self.head.x - BLOCK_SIZE, self.head.y),
+                      Point(self.head.x - 2 * BLOCK_SIZE, self.head.y)]
+        self.score = 0
+        self.food = None
+        self._place_food()
+        self.frame_iterations = 0
 
     def _step(self) -> tuple[bool, int]:
         # user input
