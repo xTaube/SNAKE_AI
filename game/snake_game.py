@@ -1,7 +1,7 @@
 import pygame
 import random
 from collections import namedtuple
-from direction import DirectionEnum
+from .direction import DirectionEnum
 
 # RGB colors
 BLACK = (0, 0, 0)
@@ -17,7 +17,7 @@ Point = namedtuple('Point', 'x, y')
 
 pygame.init()
 pygame.font.init()
-font = pygame.font.Font('comicsansms', 25)
+font = pygame.font.SysFont('arial', 25)
 
 
 class SnakeGame:
@@ -34,12 +34,23 @@ class SnakeGame:
         # init game state
         self.direction = DirectionEnum.RIGHT
         self.head = Point(self.width/2, self.height/2)
-        self.snake = [self.head, Point(self.head.x-BLOCK_SIZE, self.head.y), Point(self.head.x-2*BLOCK_SIZE)]
+        self.snake = [self.head, Point(self.head.x-BLOCK_SIZE, self.head.y), Point(self.head.x-2*BLOCK_SIZE, self.head.y)]
         self.score = 0
         self.food = None
         self._place_food()
 
-    def step(self) -> tuple[bool, int]:
+    def play(self) -> None:
+        while True:
+            game_over, score = self._step()
+            if game_over:
+                break
+
+        print(f'Final score {score}')
+
+        pygame.quit()
+        exit()
+
+    def _step(self) -> tuple[bool, int]:
         # user input
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -50,9 +61,9 @@ class SnakeGame:
                     self.direction = DirectionEnum.RIGHT
                 elif event.key == pygame.K_LEFT:
                     self.direction = DirectionEnum.LEFT
-                elif event.key == pygame.KEYDOWN:
+                elif event.key == pygame.K_DOWN:
                     self.direction = DirectionEnum.DOWN
-                elif event.key == pygame.KEYUP:
+                elif event.key == pygame.K_UP:
                     self.direction = DirectionEnum.UP
 
         # move - snake head update
@@ -75,7 +86,6 @@ class SnakeGame:
         # update ui and clock
         self._update_ui()
         self.clock.tick(SPEED)
-
         return game_over, self.score
 
     def _place_food(self) -> None:
@@ -87,7 +97,10 @@ class SnakeGame:
 
     def _is_collision(self) -> bool:
         # hits boundary
-        if self.head.x > self.width-BLOCK_SIZE or self.head.x > self.height-BLOCK_SIZE or self.head.y < 0:
+        if self.head.x > self.width-BLOCK_SIZE\
+                or self.head.x < 0\
+                or self.head.y > self.height-BLOCK_SIZE\
+                or self.head.y < 0:
             return True
         # hits itself
         if self.head in self.snake[1:]:
