@@ -16,6 +16,8 @@ SPEED = 20
 Point = namedtuple('Point', 'x, y')
 
 pygame.init()
+pygame.font.init()
+font = pygame.font.Font('comicsansms', 25)
 
 
 class SnakeGame:
@@ -36,13 +38,6 @@ class SnakeGame:
         self.score = 0
         self.food = None
         self._place_food()
-
-    def _place_food(self) -> None:
-        x = random.randint(0, (self.width-BLOCK_SIZE)//BLOCK_SIZE)*BLOCK_SIZE
-        y = random.randint(0, (self.height-BLOCK_SIZE)//BLOCK_SIZE)*BLOCK_SIZE
-        self.food = Point(x, y)
-        if self.food in self.snake:
-            self._place_food()
 
     def step(self) -> tuple[bool, int]:
         # user input
@@ -83,11 +78,35 @@ class SnakeGame:
 
         return game_over, self.score
 
-    def _is_collision(self):
-        pass
+    def _place_food(self) -> None:
+        x = random.randint(0, (self.width-BLOCK_SIZE)//BLOCK_SIZE)*BLOCK_SIZE
+        y = random.randint(0, (self.height-BLOCK_SIZE)//BLOCK_SIZE)*BLOCK_SIZE
+        self.food = Point(x, y)
+        if self.food in self.snake:
+            self._place_food()
 
-    def _update_ui(self):
-        pass
+    def _is_collision(self) -> bool:
+        # hits boundary
+        if self.head.x > self.width-BLOCK_SIZE or self.head.x > self.height-BLOCK_SIZE or self.head.y < 0:
+            return True
+        # hits itself
+        if self.head in self.snake[1:]:
+            return True
+
+        return False
+
+    def _update_ui(self) -> None:
+        self.display.fill(BLACK)
+
+        for body_part in self.snake:
+            pygame.draw.rect(self.display, BLUE1, pygame.Rect(body_part.x, body_part.y, BLOCK_SIZE, BLOCK_SIZE))
+            pygame.draw.rect(self.display, BLUE2, pygame.Rect(body_part.x+4, body_part.y+4, 12, 12))
+
+        pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+
+        score_text = font.render(f'Score: {self.score}', True, WHITE)
+        self.display.blit(score_text, [0, 0])
+        pygame.display.flip()
 
     def _move(self, direction: DirectionEnum) -> None:
         x = self.head.x
