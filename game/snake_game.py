@@ -37,8 +37,12 @@ class SnakeGame:
         self.food = None
         self._place_food()
 
-    def _place_food(self):
-        pass
+    def _place_food(self) -> None:
+        x = random.randint(0, (self.width-BLOCK_SIZE)//BLOCK_SIZE)*BLOCK_SIZE
+        y = random.randint(0, (self.height-BLOCK_SIZE)//BLOCK_SIZE)*BLOCK_SIZE
+        self.food = Point(x, y)
+        if self.food in self.snake:
+            self._place_food()
 
     def _play_step(self):
         pass
