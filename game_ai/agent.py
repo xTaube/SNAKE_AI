@@ -17,6 +17,8 @@ class Agent:
         self.epsilon = 0  # randomness
         self.gamma = 0  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
+        self.model = None   # TODO
+        self.trainer = None  # TODO
 
     @staticmethod
     def get_state(game: SnakeGameAI) -> np.array:
@@ -69,10 +71,16 @@ class Agent:
         self.memory.append((state, action, reward, next_state, done))   # popleft if MAX_MEMORY
 
     def train_long_memory(self):
-        pass
+        if len(self.memory) > BATCH_SIZE:
+            mini_sample = random.sample(self.memory, BATCH_SIZE)    # list of tuples
+        else:
+            mini_sample = self.memory
+
+        states, actions, rewards, next_states, dones = zip(*mini_sample)
+        self.trainer.train_step(states, actions, rewards, next_states, dones)
 
     def train_short_memory(self, state, action, reward, next_state, done):
-        pass
+        self.trainer.train_step(state, action, reward, next_state, done)
 
     def get_action(self, state):
         pass
