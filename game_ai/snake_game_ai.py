@@ -32,9 +32,9 @@ class SnakeGameAI:
         pygame.display.set_caption("Snake")
         self.clock = pygame.time.Clock()
 
-        self._reset()
+        self.reset()
 
-    def _reset(self) -> None:
+    def reset(self) -> None:
         # init game state
         self.direction = DirectionEnum.RIGHT
         self.head = Point(self.width / 2, self.height / 2)

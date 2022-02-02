@@ -3,15 +3,15 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import numpy as np
-from .model import Linear_QNet
+from .model import LinearQNet
 
 
 class QTrainer:
-    def __init__(self, model: Linear_QNet, lr: float, gamma: float):
+    def __init__(self, model: LinearQNet, lr: float, gamma: float):
         self.lr = lr
-        self.gama = gamma
+        self.gamma = gamma
         self.model = model
-        self.optimizer = optim.Adam(model.parameter(), lr=self.lr)
+        self.optimizer = optim.Adam(model.parameters(), lr=self.lr)
         self.criterion = nn.MSELoss()
 
     def train_step(self, state: np.array, action: list, reward: int, next_state: np.array, done: bool) -> None:
@@ -35,7 +35,7 @@ class QTrainer:
         for idx in range(len(done)):
             Q_new = reward[idx]
             if not done[idx]:
-                Q_new = reward[idx] + self.gamma*torch.max*self.model(next_state[idx])
+                Q_new = reward[idx] + self.gamma*torch.max(self.model(next_state[idx]))
 
             target[idx][torch.argmax(action).item()] = Q_new
         # 2: Q_new = r + y * max(next_predicted Q value) -> only do this if not done

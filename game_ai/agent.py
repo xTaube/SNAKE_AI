@@ -4,7 +4,7 @@ import numpy as np
 from collections import deque
 from .snake_game_ai import SnakeGameAI, Point
 from game.direction import DirectionEnum
-from .model import Linear_QNet
+from .model import LinearQNet
 from .trainer import QTrainer
 
 
@@ -20,7 +20,7 @@ class Agent:
         self.epsilon = 0  # randomness
         self.gamma = 0.9  # discount rate
         self.memory = deque(maxlen=MAX_MEMORY)  # popleft()
-        self.model = Linear_QNet(11, 256, 3)
+        self.model = LinearQNet(11, 256, 3)
         self.trainer = QTrainer(self.model, lr=LR, gamma=self.gamma)
 
     @staticmethod
