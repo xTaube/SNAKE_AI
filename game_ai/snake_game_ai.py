@@ -34,17 +34,6 @@ class SnakeGameAI:
 
         self._reset()
 
-    def play(self) -> None:
-        while True:
-            _, game_over, score = self._step()
-            if game_over:
-                break
-
-        print(f'Final score {score}')
-
-        pygame.quit()
-        exit()
-
     def _reset(self) -> None:
         # init game state
         self.direction = DirectionEnum.RIGHT
@@ -56,7 +45,7 @@ class SnakeGameAI:
         self._place_food()
         self.frame_iterations = 0
 
-    def _step(self) -> tuple[int, bool, int]:
+    def step(self, action) -> tuple[int, bool, int]:
         self.frame_iterations += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
