@@ -45,7 +45,7 @@ class SnakeGameAI:
         self._place_food()
         self.frame_iterations = 0
 
-    def step(self, action) -> tuple[int, bool, int]:
+    def step(self, action: list) -> tuple[int, bool, int]:
         self.frame_iterations += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
