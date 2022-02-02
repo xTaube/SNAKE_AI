@@ -2,14 +2,14 @@ import pygame
 import random
 from collections import namedtuple
 from game.direction import DirectionEnum
+from game.snake_game import (
+    BLACK,
+    RED,
+    WHITE,
+    BLUE1,
+    BLUE2
+)
 import numpy as np
-
-# RGB colors
-BLACK = (0, 0, 0)
-RED = (200, 0, 0)
-WHITE = (255, 255, 255)
-BLUE1 = (0, 0, 255)
-BLUE2 = (0, 100, 255)
 
 # Static variables
 BLOCK_SIZE = 20
@@ -21,7 +21,7 @@ pygame.font.init()
 font = pygame.font.SysFont('arial', 25)
 
 
-class SnakeGame:
+class SnakeGameAI:
 
     def __init__(self, width=640, height=480):
         self.width = width
@@ -70,7 +70,7 @@ class SnakeGame:
         # game over condition
         reward = 0
         game_over = False
-        if self._is_collision() or self.frame_iterations > 100 * len(self.snake):
+        if self.is_collision() or self.frame_iterations > 100 * len(self.snake):
             game_over = True
             reward = -10
             return reward, game_over, self.score
@@ -95,7 +95,7 @@ class SnakeGame:
         if self.food in self.snake:
             self._place_food()
 
-    def _is_collision(self, pt=None) -> bool:
+    def is_collision(self, pt=None) -> bool:
         if pt is None:
             pt = self.head
         # hits boundary
