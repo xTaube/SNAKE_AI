@@ -35,6 +35,7 @@ def train() -> None:
 
             if score > record:
                 record = score
+                agent.model.save()
 
             print(f'Game {agent.n_games} "Score {score} Record: {record}')
 
